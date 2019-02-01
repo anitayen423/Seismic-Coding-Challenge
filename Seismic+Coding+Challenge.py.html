@@ -1,0 +1,112 @@
+
+# coding: utf-8
+
+# In[140]:
+
+
+#imports
+
+import numpy as np
+import pandas as pd
+import json
+
+
+# In[141]:
+
+
+#Load the json file into pandas dataframe
+
+with open('/Users/anitayen/Downloads/Data/json/data01.json') as f:
+    data = json.load(f)
+
+df_data = pd.DataFrame(data)
+
+
+# In[142]:
+
+
+df_data
+
+
+# In[143]:
+
+
+#Drop columns that contain PII information (Id, name, address, SSN, 
+#location, email, username, website)
+
+#Save obfuscated data in a new dataframe
+
+df_obfuscated = df_data.copy()
+
+#Drop ID
+df_data.drop('Id', axis=1, inplace=True)
+
+#Drop Name
+df_data.drop('Name', axis=1, inplace=True)
+
+#Drop address 
+df_data.drop('Address', axis=1, inplace=True)
+
+#Drop SSN
+df_data.drop('SSN', axis=1, inplace=True)
+
+#Drop Location
+df_data.drop('Location', axis=1, inplace=True)
+
+#Drop Email
+df_data.drop('Email', axis=1, inplace=True)
+
+#Drop username
+df_data.drop('UserName', axis=1, inplace=True)
+
+#Drop Website
+df_data.drop('Website', axis=1, inplace=True)
+
+
+
+
+# In[144]:
+
+
+df_data
+
+
+# In[145]:
+
+
+#For phone number, drop last 7 digits and keep area code
+
+columns = list(df_data)
+
+for phone_num in df_data['Phone']:
+    new_num = phone_num[0:3]  
+    df_data['Phone'] = df_data['Phone'].replace(phone_num, new_num)
+
+
+# In[146]:
+
+
+df_data
+
+
+# In[147]:
+
+
+#For zipcode, drop last 2 digits
+
+for zip_code in df_data['Zip']:
+    three_digits = int(str(zip_code)[:3])
+    df_data['Zip'] = df_data['Zip'].replace(zip_code, three_digits)
+
+
+# In[148]:
+
+
+df_data
+
+
+# In[149]:
+
+
+df_data.to_json(orient='values')
+
